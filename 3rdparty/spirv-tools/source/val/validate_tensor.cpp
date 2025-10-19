@@ -246,5 +246,9 @@ spv_result_t TensorPass(ValidationState_t& _, const Instruction* inst) {
   return SPV_SUCCESS;
 }
 
+spv_result_t GraphPass(ValidationState_t& _, const Instruction* inst) {
+	return spv_result_t();
+}
+
 }  // namespace val
 }  // namespace spvtools
