@@ -43,7 +43,9 @@ extern "C++" {
 #include "renderer.h"
 #include "renderer_d3d.h"
 #include "shader_dxbc.h"
-#include "debug_renderdoc.h"
+#if BGFX_CONFIG_DEBUG_ANNOTATION
+#	include "debug_renderdoc.h"
+#endif
 #include "nvapi.h"
 #include "dxgi.h"
 

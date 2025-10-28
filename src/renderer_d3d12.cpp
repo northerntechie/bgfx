@@ -727,15 +727,17 @@ namespace bgfx { namespace d3d12
 				bgfx_PIXGetThreadInfo      = stubPIXGetThreadInfo;
 				bgfx_PIXEventsReplaceBlock = stubPIXEventsReplaceBlock;
 			}
-#endif // BGFX_CONFIG_DEBUG_ANNOTATION && (BX_PLATFORM_WINDOWS || BX_PLATFORM_WINRT)
 
 			if (_init.debug
 			||  _init.profile)
 			{
 				m_renderDocDll = loadRenderDoc();
 			}
-
 			setGraphicsDebuggerPresent(NULL != m_renderDocDll || NULL != m_winPixEvent);
+#else
+			setGraphicsDebuggerPresent(NULL != m_winPixEvent);
+#endif // BGFX_CONFIG_DEBUG_ANNOTATION && (BX_PLATFORM_WINDOWS ||
+	   // BX_PLATFORM_WINRT)
 
 			m_fbh.idx = kInvalidHandle;
 			bx::memSet(m_uniforms, 0, sizeof(m_uniforms) );
@@ -1612,7 +1614,9 @@ namespace bgfx { namespace d3d12
 			default:
 				m_nvapi.shutdown();
 
+#if BGFX_CONFIG_DEBUG_ANNOTATION
 				unloadRenderDoc(m_renderDocDll);
+#endif
 				bx::dlclose(m_winPixEvent);
 				m_winPixEvent = NULL;
 				break;
@@ -1686,7 +1690,9 @@ namespace bgfx { namespace d3d12
 			m_dxgi.shutdown();
 #endif // !BX_PLATFORM_LINUX
 
+#if BGFX_CONFIG_DEBUG_ANNOTATION
 			unloadRenderDoc(m_renderDocDll);
+#endif
 
 			bx::dlclose(m_winPixEvent);
 			m_winPixEvent = NULL;
@@ -6357,10 +6363,12 @@ namespace bgfx { namespace d3d12
 			return;
 		}
 
+#if BGFX_CONFIG_DEBUG_ANNOTATION
 		if (_render->m_capture)
 		{
 			renderDocTriggerCapture();
 		}
+#endif
 
 		BGFX_D3D12_PROFILER_BEGIN_LITERAL("rendererSubmit", kColorFrame);
 
@@ -7385,10 +7393,12 @@ namespace bgfx { namespace d3d12
 					, m_batch.m_stats.m_numImmediate[BatchD3D12::DrawIndexed]
 					);
 
+#if BGFX_CONFIG_DEBUG_ANNOTATION
 				if (NULL != m_renderDocDll)
 				{
 					tvm.printf(tvm.m_width-27, 0, 0x4f, " [F11 - RenderDoc capture] ");
 				}
+#endif
 
 				tvm.printf(10, pos++, 0x8b, "      Indices: %7d ", statsNumIndices);
 				tvm.printf(10, pos++, 0x8b, "     DVB size: %7d ", _render->m_vboffset);
